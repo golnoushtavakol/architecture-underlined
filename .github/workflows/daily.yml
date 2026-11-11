@@ -1,1 +1,228 @@
 
+name: Publish Architecture Underlined
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12,13 * * *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: architecture-underlined
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout website
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install feedparser beautifulsoup4
+
+      - name: Update headlines and archive
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python <<'PY'
+          import os
+          import re
+          import datetime as dt
+          from pathlib import Path
+          from collections import defaultdict
+          from zoneinfo import ZoneInfo
+
+          import feedparser
+          from bs4 import BeautifulSoup
+
+          now = dt.datetime.now(ZoneInfo("America/New_York"))
+
+          if os.environ.get("EVENT_NAME") == "schedule" and now.hour != 8:
+              print("Outside New York morning publication window")
+              raise SystemExit(0)
+
+          today = now.date().isoformat()
+
+          feeds = {
+              "ArchDaily": "https://www.archdaily.com/rss",
+              "Dezeen": "https://www.dezeen.com/feed/",
+              "The Architect's Newspaper": "https://www.archpaper.com/feed/",
+              "designboom": "https://www.designboom.com/feed/",
+              "Metropolis": "https://metropolismag.com/feed/",
+              "Archinect": "https://archinect.com/news/rss",
+              "Wallpaper": "https://www.wallpaper.com/feed",
+          }
+
+          stories = []
+          for source, url in feeds.items():
+              try:
+                  feed = feedparser.parse(url)
+                  for item in feed.entries:
+                      date = item.get("published_parsed") or item.get("updated_parsed")
+                      if not date:
+                          continue
+
+                      published = dt.datetime(
+                          *date[:6], tzinfo=dt.timezone.utc
+                      ).astimezone(now.tzinfo)
+
+                      age = now - published
+                      if not dt.timedelta(0) <= age <= dt.timedelta(days=14):
+                          continue
+
+                      title = BeautifulSoup(
+                          item.get("title", ""), "html.parser"
+                      ).get_text(" ", strip=True)
+                      link = item.get("link", "")
+
+                      if title and link.startswith("https://"):
+                          stories.append((published, source, title, link))
+              except Exception as error:
+                  print(source, error)
+
+          stories.sort(reverse=True)
+          selected = []
+          seen = set()
+          per_source = defaultdict(int)
+
+          for published, source, title, link in stories:
+              key = re.sub(r"[^a-z0-9]", "", title.lower())
+              if key in seen or per_source[source] >= 4:
+                  continue
+              seen.add(key)
+              per_source[source] += 1
+              selected.append((published, source, title, link))
+              if len(selected) == 20:
+                  break
+
+          if len(selected) < 5:
+              print("Not enough recent headlines. Existing issue preserved.")
+              raise SystemExit(0)
+
+          path = Path("index.html")
+          soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
+          panel = soup.select_one("main#underlined")
+
+          if panel is None:
+              raise RuntimeError("Underlined section not found")
+
+          archive_root = Path("archive")
+          archive_root.mkdir(exist_ok=True)
+
+          first_issue = archive_root / "2026-11-11" / "index.html"
+          if not first_issue.exists():
+              first_issue.parent.mkdir(parents=True, exist_ok=True)
+              first_issue.write_text(str(soup), encoding="utf-8")
+
+          for item in panel.select("a.news-item"):
+              item.decompose()
+
+          position = panel.select_one("p.intro") or panel.select_one(".panel-heading")
+          if position is None:
+              raise RuntimeError("News insertion point not found")
+
+          for published, source, title, link in selected:
+              a = soup.new_tag("a", href=link)
+              a["class"] = "news-item"
+              a["target"] = "_blank"
+              a["rel"] = "noopener noreferrer"
+
+              h = soup.new_tag("span")
+              h["class"] = "newstitle"
+              h.string = title
+
+              m = soup.new_tag("span")
+              m["class"] = "source"
+              m.string = source + " · " + published.strftime("%b %d, %Y")
+
+              arrow = soup.new_tag("span")
+              arrow["class"] = "arrow"
+              arrow.string = "↗"
+
+              a.extend([h, m, arrow])
+              position.insert_after(a)
+              position = a
+
+          issue_dates = sorted(
+              {today} | {
+                  p.parent.name
+                  for p in archive_root.glob("*/index.html")
+              },
+              reverse=True
+          )
+
+          for panel_item in soup.select("main"):
+              summary = panel_item.select_one(".issue-dropdown summary")
+              menu = panel_item.select_one(".issue-dropdown .issue-menu")
+
+              if summary is None or menu is None:
+                  continue
+
+              summary.string = now.strftime("%m/%d") + " issue"
+              menu.clear()
+
+              section_id = panel_item.get("id", "architecture")
+              for date in issue_dates:
+                  label = dt.date.fromisoformat(date).strftime("%m/%d") + " issue"
+                  href = (
+                      "#" + section_id if date == today
+                      else "/architecture-underlined/archive/" + date + "/#" + section_id
+                  )
+                  a = soup.new_tag("a", href=href)
+                  a.string = label
+                  menu.append(a)
+
+          output = str(soup)
+          path.write_text(output, encoding="utf-8")
+
+          snapshot = archive_root / today / "index.html"
+          snapshot.parent.mkdir(parents=True, exist_ok=True)
+          snapshot.write_text(output, encoding="utf-8")
+
+          print("Prepared", today, "with", len(selected), "headlines")
+          PY
+
+      - name: Commit edition and archive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html archive/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Architecture Underlined"
+            git push
+          fi
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare website
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+          if [ -d archive ]; then
+            cp -r archive _site/archive
+          fi
+          touch _site/.nojekyll
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
