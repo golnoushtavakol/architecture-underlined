@@ -151,6 +151,32 @@ def render(page, edition):
     return EDITION.sub(lambda match: match[1] + payload + match[3], page, count=1)
 
 
+def load_event_listings(path, issue_date):
+    if not path.exists():
+        return []
+    items = json.loads(path.read_text(encoding="utf-8"))
+    required = ("title", "venue", "organizer", "format", "why", "source_url")
+    unique = {}
+    for listing in items:
+        title = listing["title"]
+        if any(not listing.get(key, "").strip() for key in required):
+            raise ValueError(f"Incomplete event listing: {title}")
+        starts = datetime.strptime(listing["start_date"], "%Y-%m-%d").date()
+        ends = datetime.strptime(listing.get("end_date", listing["start_date"]), "%Y-%m-%d").date()
+        if ends < starts:
+            raise ValueError(f"Event end precedes start: {title}")
+        for key in ("source_url", "rsvp_url"):
+            if key == "rsvp_url" and not listing.get(key):
+                continue
+            url = urlsplit(listing[key])
+            if url.scheme != "https" or not url.hostname or url.username:
+                raise ValueError(f"Invalid {key} for {title}")
+        if ends.isoformat() >= issue_date:
+            key = (starts, *(re.sub(r"\W+", "", listing[k].casefold()) for k in ("title", "venue")))
+            unique.setdefault(key, listing)
+    return [unique[key] for key in sorted(unique)]
+
+
 def publish(root, now, load_stories=collect):
     page_path = root / "index.html"
     page = page_path.read_text(encoding="utf-8")
@@ -186,6 +212,9 @@ def publish(root, now, load_stories=collect):
     if not snapshot.exists():
         issue_dates.add(today)
     edition["issues"] = sorted(issue_dates, reverse=True)
+    curated = load_event_listings(root / "events/listings.json", edition["date"])
+    discovered = load_event_listings(archive / "event-discovery.json", edition["date"])
+    edition["event_listings"] = curated + discovered
     output = render(page, edition)
     if not snapshot.exists():
         snapshot.parent.mkdir(parents=True, exist_ok=True)

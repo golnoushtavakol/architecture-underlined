@@ -6,7 +6,9 @@ on:
     paths:
       - index.html
       - archive/**
+      - events/listings.json
       - scripts/publish_edition.py
+      - scripts/discover_events.py
       - .github/workflows/daily.yml
   workflow_dispatch:
   schedule:
@@ -37,6 +39,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Discover public NYC design events
+        if: github.event_name != 'push'
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/discover_events.py
 
       - name: Generate edition and archive
         run: python scripts/publish_edition.py
