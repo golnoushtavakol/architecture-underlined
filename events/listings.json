@@ -12,17 +12,6 @@
     "registration_status": "Gallery visit. The opening reception has passed."
   },
   {
-    "title": "Open Session #24: Hosted by Joy Youwakim",
-    "start_date": "2026-11-17",
-    "time": "6:30–8 p.m.",
-    "venue": "Storefront for Art and Architecture, 97 Kenmare Street, Nolita",
-    "organizer": "Storefront for Art and Architecture",
-    "format": "Gallery program",
-    "why": "Hear how Joy Youwakim uses heirloom crops and soapmaking to preserve cultural memory, followed by a conversation with anthropologist Hadeel Assali.",
-    "source_url": "https://storefront.nyc/program/open-session-24-hosted-by-joy-youwakim/",
-    "registration_status": "RSVP through the organizer."
-  },
-  {
     "title": "Fall Happy Hour with REBNY",
     "start_date": "2026-11-19",
     "time": "6–8 p.m.",
@@ -45,5 +34,123 @@
     "why": "See how Stout uses clocks, mirrors, and lighting to explore aging, ornament, and function in collectible design.",
     "source_url": "https://r-and-company.com/exhibition/katie-stout-fly-trap/",
     "registration_status": "Gallery visit during opening hours."
+  },
+  {
+    "start_date": "2026-11-06",
+    "end_date": "2026-12-19",
+    "time": "Gallery hours on organizer page",
+    "title": "Pattern Recognition: Superhouse at Five",
+    "venue": "120 Walker Street, 6R, Chinatown",
+    "organizer": "Superhouse",
+    "format": "Exhibition",
+    "why": "Twenty-one artists and makers show how the gallery’s approach to collectible design has developed.",
+    "source_url": "https://www.superhouse.us/exhibitions/pattern-recognition",
+    "registration_status": "Gallery visit."
+  },
+  {
+    "start_date": "2026-10-08",
+    "end_date": "2026-12-22",
+    "time": "Mon–Fri, 9:30 a.m.–5:30 p.m.",
+    "title": "Gio Ponti: Designing Optimism",
+    "venue": "200 Lexington Avenue, Suite 1509",
+    "organizer": "Donzella",
+    "format": "Exhibition",
+    "why": "See Ponti’s furniture and ceramics alongside comparatively rare drawings and metalwork.",
+    "source_url": "https://nydc.com/news/donzella-ltd-presents-gio-ponti-designing-optimism-an-exhibition-and-sale-exploring-the-extraordinary-breadth-of-gio-pontis-creative-vision",
+    "registration_status": "Showroom exhibition."
+  },
+  {
+    "start_date": "2026-09-25",
+    "end_date": "2026-12-13",
+    "time": "Wed–Sun, noon–6 p.m.",
+    "title": "The Biography of a Building: Runik’s House of Culture",
+    "venue": "97 Kenmare Street, Nolita",
+    "organizer": "Storefront for Art and Architecture",
+    "format": "Exhibition",
+    "why": "Objects and oral histories trace the life of a cultural building in Kosovo and plans for its reuse.",
+    "source_url": "https://storefront.nyc/program/the-biography-of-a-building-runiks-house-of-culture-by-petrit-halilaj-and-hajde-foundation-with-ars-atelie/",
+    "registration_status": "Gallery visit."
+  },
+  {
+    "start_date": "2026-10-01",
+    "end_date": "2027-03-27",
+    "time": "Gallery hours on organizer page",
+    "title": "Dark Matter U: Justice, Pedagogy, Design",
+    "venue": "536 LaGuardia Place, Greenwich Village",
+    "organizer": "Center for Architecture",
+    "format": "Exhibition",
+    "why": "See how a design collective puts experiments in pedagogy into practice.",
+    "source_url": "https://www.centerforarchitecture.org/exhibitions/dark-matter-u-justice-pedagogy-design/",
+    "registration_status": "Gallery visit."
+  },
+  {
+    "start_date": "2026-11-20",
+    "time": "3–7 p.m.",
+    "title": "Sunnyside Gardens and Nerton millwork shop tour",
+    "venue": "Meet at 45-14 Skillman Avenue, Queens",
+    "organizer": "AIA Brooklyn",
+    "format": "Studio visit",
+    "why": "Tour a Garden City neighborhood, see how custom millwork is fabricated, and meet peers at the shop reception.",
+    "source_url": "https://calendar.aiany.org/2026/11/20/aia-brooklyn-double-header-sunnyside-gardens-tour-followed-by-nerton-construction-shop-tour-and-reception/",
+    "registration_status": "Registration required.",
+    "rsvp_url": "https://www.eventbrite.com/e/2004047978451"
+  },
+  {
+    "start_date": "2026-11-20",
+    "time": "6–8 p.m.",
+    "title": "Westbeth Winter Show opening reception",
+    "venue": "Westbeth Gallery, 55 Bethune Street",
+    "organizer": "Westbeth",
+    "format": "Gallery opening",
+    "why": "Meet resident artists at the opening of the annual show across sculpture, printmaking and installation.",
+    "source_url": "https://westbeth.org/event/2026-westbeth-winter-show/",
+    "registration_status": "Opening reception."
+  },
+  {
+    "start_date": "2026-12-01",
+    "time": "6:30 p.m.",
+    "title": "Forms of Intelligence: Labor",
+    "venue": "The Cooper Union, Manhattan",
+    "organizer": "The Architectural League of New York",
+    "format": "Talk",
+    "why": "Hear architects discuss which parts of their work should grow as AI changes practice.",
+    "source_url": "https://archleague.org/event/current-work-forms-of-intelligence-labor/",
+    "registration_status": "Registration through the League."
+  },
+  {
+    "start_date": "2026-12-03",
+    "time": "6–8 p.m.",
+    "title": "Designing Across a Lifetime",
+    "venue": "Center for Architecture, 536 LaGuardia Place",
+    "organizer": "AIA New York",
+    "format": "Talk",
+    "why": "Hear how designers and public agencies approach aging, mobility and accessibility across New York.",
+    "source_url": "https://calendar.aiany.org/2026/12/03/designing-across-a-lifetime/",
+    "registration_status": "Registration required.",
+    "rsvp_url": "https://aiany.my.site.com/community/evt__QuickEvent?id=a0bPO000007B0K1"
+  },
+  {
+    "start_date": "2026-12-05",
+    "time": "10:30 a.m.–12:30 p.m.",
+    "title": "Walking Tour: How to Read the City",
+    "venue": "Meet at northeast corner of 79th Street and Fifth Avenue",
+    "organizer": "AIA New York",
+    "format": "Tour",
+    "why": "Read the Upper East Side through zoning, building types and details such as brick bonding.",
+    "source_url": "https://calendar.aiany.org/2026/12/05/walking-tour-how-to-read-the-city/",
+    "registration_status": "Registration required.",
+    "rsvp_url": "https://aiany.my.site.com/community/evt__QuickEvent?id=a0bPO000007S7Dp"
+  },
+  {
+    "start_date": "2026-12-08",
+    "time": "6–8 p.m.",
+    "title": "Retail Design Institute’s 55th International Design Competition",
+    "venue": "Center for Architecture, 536 LaGuardia Place",
+    "organizer": "AIA New York Interiors Committee and Retail Design Institute NY",
+    "format": "Industry gathering",
+    "why": "Meet retail designers and hear how New York teams developed their winning interiors.",
+    "source_url": "https://calendar.aiany.org/2026/12/08/retail-design-institutes-55th-international-design-competition/",
+    "registration_status": "Registration required.",
+    "rsvp_url": "https://aiany.my.site.com/community/evt__QuickEvent?id=a0bjR000005h6Yj"
   }
 ]
